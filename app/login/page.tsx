@@ -1,0 +1,57 @@
+'use client'
+import { useRouter }
+from 'next/navigation'
+import { useState } from 'react'
+import { supabase } from '@/lib/supabase'
+
+export default function LoginPage() {
+    const router =
+  useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (error) {
+      alert(error.message)
+     } 
+    else {
+     router.push('/portal')
+    }
+  }
+
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6">
+          Iniciar Sesión
+        </h1>
+
+        <input
+          type="email"
+          placeholder="Correo"
+          className="w-full border p-3 rounded mb-4"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Contraseña"
+          className="w-full border p-3 rounded mb-4"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <button
+          onClick={handleLogin}
+          className="w-full bg-black text-white p-3 rounded"
+        >
+          Entrar
+        </button>
+      </div>
+    </main>
+  )
+}
