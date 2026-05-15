@@ -39,7 +39,7 @@ export default function LoginPage() {
 
     } else {
 
-       router.push('/portal')
+      alert('LOGIN EXITOSO')
 
     }
 
