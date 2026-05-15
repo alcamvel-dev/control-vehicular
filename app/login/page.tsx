@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useRouter }
 from 'next/navigation'
 
@@ -20,8 +21,8 @@ export default function LoginPage() {
     useState('')
 
   const handleLogin = async (
-    e: any
-  ) => {
+  e: React.MouseEvent<HTMLButtonElement>
+ ) => {
 
     e.preventDefault()
 
@@ -75,13 +76,13 @@ export default function LoginPage() {
           className="w-full border p-3 mb-4 rounded"
         />
 
-        <button
+         <button
           type="button"
-          onClick={handleLogin}
+          onClick={(e) => handleLogin(e)}
           className="w-full bg-black text-white p-3 rounded"
         >
           Entrar
-        </button>
+         </button>
 
       </div>
 
