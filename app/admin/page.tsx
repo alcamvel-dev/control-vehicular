@@ -1,145 +1,204 @@
 'use client'
 
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useState } from 'react'
 
 export default function AdminPage() {
 
-  const [clientes, setClientes] = useState(0)
-  const [vehiculos, setVehiculos] = useState(0)
-  const [vencimientos, setVencimientos] = useState(0)
-
-  useEffect(() => {
-
-    cargarDatos()
-
-  }, [])
-
-  async function cargarDatos() {
-
-    const clientesDB =
-      await supabase
-      .from('clientes')
-      .select('*')
-
-    const vehiculosDB =
-      await supabase
-      .from('vehiculos')
-      .select('*')
-
-    const vencimientosDB =
-      await supabase
-      .from('vencimientos')
-      .select('*')
-
-    setClientes(
-      clientesDB.data?.length || 0
-    )
-
-    setVehiculos(
-      vehiculosDB.data?.length || 0
-    )
-
-    setVencimientos(
-      vencimientosDB.data?.length || 0
-    )
-
-  }
+  const [seccion, setSeccion] =
+    useState('dashboard')
 
   return (
 
-    <main className="min-h-screen bg-gray-100 p-10">
+    <main className="flex min-h-screen bg-gray-100">
 
-      <h1 className="text-5xl font-bold mb-10">
-        Panel Administrador
-      </h1>
+      {/* SIDEBAR */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <aside className="w-72 bg-black text-white p-6">
 
-        <div className="bg-white p-8 rounded-xl shadow">
+        <h1 className="text-3xl font-bold mb-10">
+          Control Vehicular
+        </h1>
 
-          <h2 className="text-3xl font-bold">
-            {clientes}
-          </h2>
+        <div className="flex flex-col gap-4">
 
-          <p>
-            Clientes registrados
-          </p>
+          <button
+            onClick={() =>
+              setSeccion('dashboard')
+            }
+            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
+          >
+            Dashboard
+          </button>
 
-        </div>
-
-        <div className="bg-white p-8 rounded-xl shadow">
-
-          <h2 className="text-3xl font-bold">
-            {vehiculos}
-          </h2>
-
-          <p>
-            Vehículos registrados
-          </p>
-
-        </div>
-
-        <div className="bg-white p-8 rounded-xl shadow">
-
-          <h2 className="text-3xl font-bold">
-            {vencimientos}
-          </h2>
-
-          <p>
-            Vencimientos
-          </p>
-
-        </div>
-
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <Link
-          href="/clientes"
-          className="bg-white p-8 rounded-xl shadow hover:shadow-xl"
-        >
-          <h2 className="text-3xl font-bold mb-3">
+          <button
+            onClick={() =>
+              setSeccion('clientes')
+            }
+            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
+          >
             Clientes
-          </h2>
+          </button>
 
-          <p>
-            Administrar clientes
-          </p>
-
-        </Link>
-
-        <Link
-          href="/vehiculos"
-          className="bg-white p-8 rounded-xl shadow hover:shadow-xl"
-        >
-          <h2 className="text-3xl font-bold mb-3">
+          <button
+            onClick={() =>
+              setSeccion('vehiculos')
+            }
+            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
+          >
             Vehículos
-          </h2>
+          </button>
 
-          <p>
-            Control vehicular
-          </p>
-
-        </Link>
-
-        <Link
-          href="/vencimientos"
-          className="bg-white p-8 rounded-xl shadow hover:shadow-xl"
-        >
-          <h2 className="text-3xl font-bold mb-3">
+          <button
+            onClick={() =>
+              setSeccion('vencimientos')
+            }
+            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
+          >
             Vencimientos
-          </h2>
+          </button>
 
-          <p>
-            Alertas y documentos
-          </p>
+          <button
+            onClick={() =>
+              setSeccion('documentos')
+            }
+            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
+          >
+            Documentos
+          </button>
 
-        </Link>
+        </div>
 
-      </div>
+      </aside>
+
+      {/* CONTENIDO */}
+
+      <section className="flex-1 p-10">
+
+        {seccion === 'dashboard' && (
+
+          <div>
+
+            <h1 className="text-5xl font-bold mb-10">
+              Dashboard
+            </h1>
+
+            <div className="grid grid-cols-3 gap-6">
+
+              <div className="bg-white p-8 rounded-xl shadow">
+
+                <h2 className="text-4xl font-bold">
+                  15
+                </h2>
+
+                <p>
+                  Clientes
+                </p>
+
+              </div>
+
+              <div className="bg-white p-8 rounded-xl shadow">
+
+                <h2 className="text-4xl font-bold">
+                  48
+                </h2>
+
+                <p>
+                  Vehículos
+                </p>
+
+              </div>
+
+              <div className="bg-white p-8 rounded-xl shadow">
+
+                <h2 className="text-4xl font-bold">
+                  7
+                </h2>
+
+                <p>
+                  Vencimientos
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )}
+
+        {seccion === 'clientes' && (
+
+          <div>
+
+            <h1 className="text-5xl font-bold mb-10">
+              Clientes
+            </h1>
+
+            <div className="bg-white p-8 rounded-xl shadow">
+
+              Tabla de clientes
+
+            </div>
+
+          </div>
+
+        )}
+
+        {seccion === 'vehiculos' && (
+
+          <div>
+
+            <h1 className="text-5xl font-bold mb-10">
+              Vehículos
+            </h1>
+
+            <div className="bg-white p-8 rounded-xl shadow">
+
+              Tabla de vehículos
+
+            </div>
+
+          </div>
+
+        )}
+
+        {seccion === 'vencimientos' && (
+
+          <div>
+
+            <h1 className="text-5xl font-bold mb-10">
+              Vencimientos
+            </h1>
+
+            <div className="bg-white p-8 rounded-xl shadow">
+
+              Alertas y vencimientos
+
+            </div>
+
+          </div>
+
+        )}
+
+        {seccion === 'documentos' && (
+
+          <div>
+
+            <h1 className="text-5xl font-bold mb-10">
+              Documentos
+            </h1>
+
+            <div className="bg-white p-8 rounded-xl shadow">
+
+              Gestión documental
+
+            </div>
+
+          </div>
+
+        )}
+
+      </section>
 
     </main>
 
