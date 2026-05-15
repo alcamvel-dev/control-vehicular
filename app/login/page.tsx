@@ -39,8 +39,7 @@ export default function LoginPage() {
 
     } else {
 
-      window.location.href =
-        '/portal'
+       router.push('/portal')
 
     }
 
