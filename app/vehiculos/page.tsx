@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
 export default function VehiculosPage() {
@@ -11,7 +11,8 @@ export default function VehiculosPage() {
   const [clienteId, setClienteId] = useState('')
   const [marca, setMarca] = useState('')
   const [modelo, setModelo] = useState('')
-  const modelosPorMarca: any = {
+  const [placas, setPlacas] = useState('')
+  const [anio, setAnio] = useState('')
 
   Volkswagen: [
     'Jetta',
