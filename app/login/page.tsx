@@ -10,7 +10,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = async () => {
+  const handleLogin = async (
+    e: any
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -35,23 +36,28 @@ export default function LoginPage() {
         <input
           type="email"
           placeholder="Correo"
-          className="w-full border p-3 rounded mb-4"
-          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          onChange={(e) =>
+          setEmail(e.target.value)
+         }
         />
 
         <input
           type="password"
           placeholder="Contraseña"
-          className="w-full border p-3 rounded mb-4"
-          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          onChange={(e) =>
+           setPassword(e.target.value)
+        }
         />
 
         <button
+          type="button"
           onClick={handleLogin}
           className="w-full bg-black text-white p-3 rounded"
-        >
-          Entrar
-        </button>
+         >
+         Entrar
+         </button>
       </div>
     </main>
   )
