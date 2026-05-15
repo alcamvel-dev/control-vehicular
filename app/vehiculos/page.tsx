@@ -11,6 +11,44 @@ export default function VehiculosPage() {
   const [clienteId, setClienteId] = useState('')
   const [marca, setMarca] = useState('')
   const [modelo, setModelo] = useState('')
+  const modelosPorMarca: any = {
+
+  Volkswagen: [
+    'Jetta',
+    'Golf',
+    'Tiguan',
+    'Virtus',
+  ],
+
+  BMW: [
+    'X5',
+    'X3',
+    '320i',
+    'M3',
+  ],
+
+  Audi: [
+    'A3',
+    'A4',
+    'Q5',
+    'Q7',
+  ],
+
+  Toyota: [
+    'Corolla',
+    'Hilux',
+    'Yaris',
+    'RAV4',
+  ],
+
+  Nissan: [
+    'Versa',
+    'Sentra',
+    'Xtrail',
+    'Frontier',
+  ],
+
+}
   const [placas, setPlacas] = useState('')
   const [anio, setAnio] = useState('')
 
@@ -113,22 +151,98 @@ export default function VehiculosPage() {
             ))}
           </select>
 
-          <input
-            type="text"
-            placeholder="Marca"
-            className="border p-3 rounded"
-            value={marca}
-            onChange={(e) => setMarca(e.target.value)}
-          />
+          <select
+  value={marca}
+  onChange={(e) =>
+    setMarca(e.target.value)
+  }
+  className="border p-3 rounded"
+>
 
-          <input
-            type="text"
-            placeholder="Modelo"
-            className="border p-3 rounded"
-            value={modelo}
-            onChange={(e) => setModelo(e.target.value)}
-          />
+  <option value="">
+    Selecciona una marca
+  </option>
 
+  <option value="Audi">
+    Audi
+  </option>
+
+  <option value="BMW">
+    BMW
+  </option>
+
+  <option value="Chevrolet">
+    Chevrolet
+  </option>
+
+  <option value="Ford">
+    Ford
+  </option>
+
+  <option value="Honda">
+    Honda
+  </option>
+
+  <option value="Hyundai">
+    Hyundai
+  </option>
+
+  <option value="Kia">
+    Kia
+  </option>
+
+  <option value="Mazda">
+    Mazda
+  </option>
+
+  <option value="Mercedes-Benz">
+    Mercedes-Benz
+  </option>
+
+  <option value="Nissan">
+    Nissan
+  </option>
+
+  <option value="Seat">
+    Seat
+  </option>
+
+  <option value="Toyota">
+    Toyota
+  </option>
+
+  <option value="Volkswagen">
+    Volkswagen
+  </option>
+
+</select>
+          
+          <select
+  value={modelo}
+  onChange={(e) =>
+    setModelo(e.target.value)
+  }
+  className="border p-3 rounded"
+>
+
+  <option value="">
+    Selecciona modelo
+  </option>
+
+  {modelosPorMarca[marca]?.map(
+    (item: string) => (
+
+      <option
+        key={item}
+        value={item}
+      >
+        {item}
+      </option>
+
+    )
+  )}
+
+</select>
           <input
             type="text"
             placeholder="Placas"

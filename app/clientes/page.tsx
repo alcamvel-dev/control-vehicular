@@ -4,113 +4,133 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
 export default function ClientesPage() {
+
+  const [clientes, setClientes] = useState<any[]>([])
+
   const [nombre, setNombre] = useState('')
   const [telefono, setTelefono] = useState('')
   const [correo, setCorreo] = useState('')
-  const [clientes, setClientes] = useState<any[]>([])
 
   useEffect(() => {
-    obtenerClientes()
+
+    cargarClientes()
+
   }, [])
 
-  const obtenerClientes = async () => {
-    const { data } = await supabase
+  async function cargarClientes() {
+
+    const { data } =
+      await supabase
       .from('clientes')
       .select('*')
-      .order('id', { ascending: false })
 
-    if (data) setClientes(data)
+    if (data) {
+
+      setClientes(data)
+
+    }
+
   }
 
-  const guardarCliente = async () => {
-    if (!nombre) return alert('Nombre requerido')
+  async function crearCliente() {
 
-    const { error } = await supabase
+    await supabase
       .from('clientes')
-      .insert([
-        {
-          nombre,
-          telefono,
-          correo,
-        },
-      ])
+      .insert({
 
-    if (error) {
-      alert(error.message)
-    } else {
-      alert('Cliente guardado')
+        nombre,
+        telefono,
+        correo,
 
-      setNombre('')
-      setTelefono('')
-      setCorreo('')
+      })
 
-      obtenerClientes()
-    }
+    setNombre('')
+    setTelefono('')
+    setCorreo('')
+
+    cargarClientes()
+
   }
 
   return (
+
     <main className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-4xl font-bold mb-8">
+
+      <h1 className="text-5xl font-bold mb-10">
         Clientes
       </h1>
 
-      <div className="bg-white p-6 rounded-xl shadow mb-8">
-        <h2 className="text-2xl font-semibold mb-4">
+      <div className="bg-white p-8 rounded-xl shadow mb-10">
+
+        <h2 className="text-3xl font-bold mb-6">
           Nuevo Cliente
         </h2>
 
-        <div className="grid gap-4">
-          <input
-            type="text"
-            placeholder="Nombre"
-            className="border p-3 rounded"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-          />
+        <input
+          placeholder="Nombre"
+          value={nombre}
+          onChange={(e) =>
+            setNombre(e.target.value)
+          }
+          className="w-full border p-3 mb-4 rounded"
+        />
 
-          <input
-            type="text"
-            placeholder="Teléfono"
-            className="border p-3 rounded"
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-          />
+        <input
+          placeholder="Teléfono"
+          value={telefono}
+          onChange={(e) =>
+            setTelefono(e.target.value)
+          }
+          className="w-full border p-3 mb-4 rounded"
+        />
 
-          <input
-            type="email"
-            placeholder="Correo"
-            className="border p-3 rounded"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-          />
+        <input
+          placeholder="Correo"
+          value={correo}
+          onChange={(e) =>
+            setCorreo(e.target.value)
+          }
+          className="w-full border p-3 mb-4 rounded"
+        />
 
-          <button
-            onClick={guardarCliente}
-            className="bg-black text-white p-3 rounded"
+        <button
+          onClick={crearCliente}
+          className="bg-black text-white px-6 py-3 rounded"
+        >
+          Guardar Cliente
+        </button>
+
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {clientes.map((cliente) => (
+
+          <div
+            key={cliente.id}
+            className="bg-white p-6 rounded-xl shadow"
           >
-            Guardar Cliente
-          </button>
-        </div>
+
+            <h2 className="text-2xl font-bold mb-3">
+              {cliente.nombre}
+            </h2>
+
+            <p>
+              {cliente.telefono}
+            </p>
+
+            <p>
+              {cliente.correo}
+            </p>
+
+          </div>
+
+        ))}
+
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow">
-        <h2 className="text-2xl font-semibold mb-4">
-          Lista de Clientes
-        </h2>
-
-        <div className="space-y-4">
-          {clientes.map((cliente) => (
-            <div
-              key={cliente.id}
-              className="border p-4 rounded"
-            >
-              <p><strong>{cliente.nombre}</strong></p>
-              <p>{cliente.telefono}</p>
-              <p>{cliente.correo}</p>
-            </div>
-          ))}
-        </div>
-      </div>
     </main>
+
   )
+
 }
