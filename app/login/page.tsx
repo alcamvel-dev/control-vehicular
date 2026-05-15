@@ -1,37 +1,57 @@
 'use client'
+
 import { useRouter }
 from 'next/navigation'
 
-import { useState } 
+import { useState }
 from 'react'
-import { supabase } 
+
+import { supabase }
 from '@/lib/supabase'
 
 export default function LoginPage() {
-    const router =
-  useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+
+  const router = useRouter()
+
+  const [email, setEmail] =
+    useState('')
+
+  const [password, setPassword] =
+    useState('')
 
   const handleLogin = async (
     e: any
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+  ) => {
+
+    e.preventDefault()
+
+    const { error } =
+      await supabase.auth.signInWithPassword({
+
+        email,
+        password,
+
+      })
 
     if (error) {
+
       alert(error.message)
-     } 
-    else {
-    window.location.href =
-  '/portal'
+
+    } else {
+
+      window.location.href =
+        '/portal'
+
     }
+
   }
 
   return (
+
     <main className="min-h-screen flex items-center justify-center bg-gray-100">
+
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+
         <h1 className="text-3xl font-bold mb-6">
           Iniciar Sesión
         </h1>
@@ -41,8 +61,9 @@ export default function LoginPage() {
           placeholder="Correo"
           value={email}
           onChange={(e) =>
-          setEmail(e.target.value)
-         }
+            setEmail(e.target.value)
+          }
+          className="w-full border p-3 mb-4 rounded"
         />
 
         <input
@@ -50,18 +71,23 @@ export default function LoginPage() {
           placeholder="Contraseña"
           value={password}
           onChange={(e) =>
-           setPassword(e.target.value)
-        }
+            setPassword(e.target.value)
+          }
+          className="w-full border p-3 mb-4 rounded"
         />
 
         <button
           type="button"
           onClick={handleLogin}
           className="w-full bg-black text-white p-3 rounded"
-         >
-         Entrar
-         </button>
+        >
+          Entrar
+        </button>
+
       </div>
+
     </main>
+
   )
+
 }
