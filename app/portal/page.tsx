@@ -1,12 +1,37 @@
 'use client'
 
 import { useState } from 'react'
+import { useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function PortalPage() {
 
   const [seccion, setSeccion] =
     useState('vehiculos')
 
+  const [vehiculos, setVehiculos] =
+  useState<any[]>([])
+
+  useEffect(() => {
+
+  obtenerVehiculos()
+
+}, [])
+
+async function obtenerVehiculos() {
+
+  const { data, error } =
+    await supabase
+      .from('vehiculos')
+      .select('*')
+
+  if (!error && data) {
+
+    setVehiculos(data)
+
+  }
+
+}
   return (
 
     <main className="flex min-h-screen bg-gray-100">
@@ -84,7 +109,36 @@ export default function PortalPage() {
 
             <div className="bg-white p-8 rounded-xl shadow">
 
-              Aquí aparecerán los vehículos
+            <div className="grid gap-4">
+
+  {vehiculos.map((vehiculo) => (
+
+    <div
+      key={vehiculo.id}
+      className="border p-4 rounded"
+    >
+
+      <h2 className="text-2xl font-bold">
+        {vehiculo.marca}
+      </h2>
+
+      <p>
+        Modelo: {vehiculo.modelo}
+      </p>
+
+      <p>
+        Placas: {vehiculo.placas}
+      </p>
+
+      <p>
+        Año: {vehiculo.anio}
+      </p>
+
+    </div>
+
+  ))}
+
+</div>
 
             </div>
 
