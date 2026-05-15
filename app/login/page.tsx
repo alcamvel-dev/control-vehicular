@@ -20,7 +20,8 @@ export default function LoginPage() {
       alert(error.message)
      } 
     else {
-     router.push('/portal')
+    window.location.href =
+  '/portal'
     }
   }
 
