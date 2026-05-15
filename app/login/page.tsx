@@ -1,30 +1,17 @@
 'use client'
 
-import React from 'react'
-import { useRouter }
-from 'next/navigation'
-
-import { useState }
-from 'react'
-
-import { supabase }
-from '@/lib/supabase'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 export default function LoginPage() {
 
   const router = useRouter()
 
-  const [email, setEmail] =
-    useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
-  const [password, setPassword] =
-    useState('')
-
-  const handleLogin = async (
-  e: React.MouseEvent<HTMLButtonElement>
- ) => {
-
-    e.preventDefault()
+  const handleLogin = async () => {
 
     const { error } =
       await supabase.auth.signInWithPassword({
@@ -41,6 +28,8 @@ export default function LoginPage() {
     } else {
 
       alert('LOGIN EXITOSO')
+
+      router.push('/portal')
 
     }
 
@@ -76,13 +65,12 @@ export default function LoginPage() {
           className="w-full border p-3 mb-4 rounded"
         />
 
-         <button
-          type="button"
-          onClick={(e) => handleLogin(e)}
+        <button
+          onClick={handleLogin}
           className="w-full bg-black text-white p-3 rounded"
         >
           Entrar
-         </button>
+        </button>
 
       </div>
 
