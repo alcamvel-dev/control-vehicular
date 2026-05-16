@@ -13,7 +13,30 @@ export default function VehiculosPage() {
   const [modelo, setModelo] = useState('')
   const [placas, setPlacas] = useState('')
   const [anio, setAnio] = useState('')
+  const modelosPorMarca: any = {
 
+  Volkswagen: [
+    'Jetta',
+    'Golf',
+    'Tiguan',
+    'Virtus',
+  ],
+
+  BMW: [
+    'X5',
+    'X3',
+    '320i',
+    'M3',
+  ],
+
+  Audi: [
+    'A3',
+    'A4',
+    'Q5',
+    'Q7',
+  ],
+
+}
   Volkswagen: [
     'Jetta',
     'Golf',
@@ -117,7 +140,41 @@ export default function VehiculosPage() {
       obtenerVehiculos()
     }
   }
+     
+      async function guardarVehiculo() {
 
+  const { error } =
+    await supabase
+      .from('vehiculos')
+      .insert([
+
+        {
+          cliente: clienteId,
+          marca,
+          modelo,
+          placas,
+          anio,
+        }
+
+      ])
+
+  if (error) {
+
+    alert(error.message)
+
+  } else {
+
+    alert('Vehículo guardado')
+
+    setClienteId('')
+    setMarca('')
+    setModelo('')
+    setPlacas('')
+    setAnio('')
+
+  }
+
+}
   return (
     <main className="min-h-screen bg-gray-100 p-10">
 
@@ -265,8 +322,13 @@ export default function VehiculosPage() {
             className="bg-black text-white p-3 rounded"
           >
             Guardar Vehículo
-          </button>
 
+          <button
+            onClick={guardarVehiculo}
+            className="w-full bg-black text-white p-3 rounded"
+           >
+               Guardar Vehículo
+             </button>
         </div>
 
       </div>
