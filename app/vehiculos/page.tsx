@@ -42,8 +42,7 @@ export default function VehiculosPage() {
     'Golf',
     'Tiguan',
     'Virtus',
-  ],
-
+  
   BMW: [
     'X5',
     'X3',
@@ -74,7 +73,7 @@ export default function VehiculosPage() {
 
 }
   const [placas, setPlacas] = useState('')
-  const [anio, setAnio] = useState('')
+  Sconst [anio, setAnio] = useState('')
 
   useEffect(() => {
     obtenerClientes()
