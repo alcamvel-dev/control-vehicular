@@ -13,6 +13,7 @@ export default function VehiculosPage() {
   const [modelo, setModelo] = useState('')
   const [placas, setPlacas] = useState('')
   const [anio, setAnio] = useState('')
+  
   const modelosPorMarca: any = {
 
   Volkswagen: [
@@ -35,6 +36,8 @@ export default function VehiculosPage() {
     'Q5',
     'Q7',
   ],
+
+}
 
 }
   Volkswagen: [
