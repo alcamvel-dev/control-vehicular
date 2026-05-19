@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
 export default function VehiculosPage() {
@@ -13,87 +13,69 @@ export default function VehiculosPage() {
   const [modelo, setModelo] = useState('')
   const [placas, setPlacas] = useState('')
   const [anio, setAnio] = useState('')
-  
+
   const modelosPorMarca: any = {
 
-  Volkswagen: [
-    'Jetta',
-    'Golf',
-    'Tiguan',
-    'Virtus',
-  ],
+    Volkswagen: [
+      'Jetta',
+      'Golf',
+      'Tiguan',
+      'Virtus',
+    ],
 
-  BMW: [
-    'X5',
-    'X3',
-    '320i',
-    'M3',
-  ],
+    BMW: [
+      'X5',
+      'X3',
+      '320i',
+      'M3',
+    ],
 
-  Audi: [
-    'A3',
-    'A4',
-    'Q5',
-    'Q7',
-  ],
+    Audi: [
+      'A3',
+      'A4',
+      'Q5',
+      'Q7',
+    ],
 
-}
+    Toyota: [
+      'Corolla',
+      'Hilux',
+      'Yaris',
+      'RAV4',
+    ],
 
-}
-  Volkswagen: [
-    'Jetta',
-    'Golf',
-    'Tiguan',
-    'Virtus',
-  
-  BMW: [
-    'X5',
-    'X3',
-    '320i',
-    'M3',
-  ],
+    Nissan: [
+      'Versa',
+      'Sentra',
+      'Xtrail',
+      'Frontier',
+    ],
 
-  Audi: [
-    'A3',
-    'A4',
-    'Q5',
-    'Q7',
-  ],
-
-  Toyota: [
-    'Corolla',
-    'Hilux',
-    'Yaris',
-    'RAV4',
-  ],
-
-  Nissan: [
-    'Versa',
-    'Sentra',
-    'Xtrail',
-    'Frontier',
-  ],
-
-}
-  const [placas, setPlacas] = useState('')
-  Sconst [anio, setAnio] = useState('')
+  }
 
   useEffect(() => {
+
     obtenerClientes()
     obtenerVehiculos()
+
   }, [])
 
   const obtenerClientes = async () => {
+
     const { data, error } = await supabase
       .from('clientes')
       .select('*')
 
     if (!error && data) {
+
       setClientes(data)
+
     }
+
   }
 
   const obtenerVehiculos = async () => {
+
     const { data, error } = await supabase
       .from('vehiculos')
       .select(`
@@ -105,48 +87,22 @@ export default function VehiculosPage() {
       .order('id', { ascending: false })
 
     if (!error && data) {
+
       setVehiculos(data)
+
     }
+
   }
 
   const guardarVehiculo = async () => {
 
     if (!clienteId) {
+
       return alert('Selecciona un cliente')
+
     }
 
     const { error } = await supabase
-      .from('vehiculos')
-      .insert([
-        {
-          cliente_id: clienteId,
-          marca,
-          modelo,
-          placas,
-          anio: Number(anio)
-        }
-      ])
-
-    if (error) {
-      alert(error.message)
-    } else {
-
-      alert('Vehículo registrado')
-
-      setClienteId('')
-      setMarca('')
-      setModelo('')
-      setPlacas('')
-      setAnio('')
-
-      obtenerVehiculos()
-    }
-  }
-     
-      async function guardarVehiculo() {
-
-  const { error } =
-    await supabase
       .from('vehiculos')
       .insert([
 
@@ -160,163 +116,139 @@ export default function VehiculosPage() {
 
       ])
 
-  if (error) {
+    if (error) {
 
-    alert(error.message)
+      alert(error.message)
 
-  } else {
+    } else {
 
-    alert('Vehículo guardado')
+      alert('Vehículo guardado')
 
-    setClienteId('')
-    setMarca('')
-    setModelo('')
-    setPlacas('')
-    setAnio('')
+      setClienteId('')
+      setMarca('')
+      setModelo('')
+      setPlacas('')
+      setAnio('')
+
+      obtenerVehiculos()
+
+    }
 
   }
 
-}
   return (
-    <main className="min-h-screen bg-gray-100 p-10">
 
-      <h1 className="text-4xl font-bold mb-8">
+    <main className="p-10 bg-gray-100 min-h-screen">
+
+      <h1 className="text-5xl font-bold mb-10">
         Registro de Vehículos
       </h1>
 
-      <div className="bg-white p-6 rounded-xl shadow mb-8">
+      <div className="bg-white p-6 rounded-xl shadow mb-10">
 
-        <h2 className="text-2xl font-semibold mb-4">
+        <h2 className="text-3xl font-bold mb-6">
           Nuevo Vehículo
         </h2>
 
         <div className="grid gap-4">
 
           <select
-            className="border p-3 rounded"
             value={clienteId}
-            onChange={(e) => setClienteId(e.target.value)}
+            onChange={(e) =>
+              setClienteId(e.target.value)
+            }
+            className="border p-3 rounded"
           >
+
             <option value="">
               Selecciona Cliente
             </option>
 
             {clientes.map((cliente) => (
+
               <option
                 key={cliente.id}
                 value={cliente.id}
               >
                 {cliente.nombre}
               </option>
+
             ))}
+
           </select>
 
           <select
-  value={marca}
-  onChange={(e) =>
-    setMarca(e.target.value)
-  }
-  className="border p-3 rounded"
->
+            value={marca}
+            onChange={(e) => {
 
-  <option value="">
-    Selecciona una marca
-  </option>
+              setMarca(e.target.value)
+              setModelo('')
 
-  <option value="Audi">
-    Audi
-  </option>
+            }}
+            className="border p-3 rounded"
+          >
 
-  <option value="BMW">
-    BMW
-  </option>
+            <option value="">
+              Selecciona Marca
+            </option>
 
-  <option value="Chevrolet">
-    Chevrolet
-  </option>
+            {Object.keys(modelosPorMarca).map((marcaItem) => (
 
-  <option value="Ford">
-    Ford
-  </option>
+              <option
+                key={marcaItem}
+                value={marcaItem}
+              >
+                {marcaItem}
+              </option>
 
-  <option value="Honda">
-    Honda
-  </option>
+            ))}
 
-  <option value="Hyundai">
-    Hyundai
-  </option>
+          </select>
 
-  <option value="Kia">
-    Kia
-  </option>
-
-  <option value="Mazda">
-    Mazda
-  </option>
-
-  <option value="Mercedes-Benz">
-    Mercedes-Benz
-  </option>
-
-  <option value="Nissan">
-    Nissan
-  </option>
-
-  <option value="Seat">
-    Seat
-  </option>
-
-  <option value="Toyota">
-    Toyota
-  </option>
-
-  <option value="Volkswagen">
-    Volkswagen
-  </option>
-
-</select>
-          
           <select
-  value={modelo}
-  onChange={(e) =>
-    setModelo(e.target.value)
-  }
-  className="border p-3 rounded"
->
+            value={modelo}
+            onChange={(e) =>
+              setModelo(e.target.value)
+            }
+            className="border p-3 rounded"
+          >
 
-  <option value="">
-    Selecciona modelo
-  </option>
+            <option value="">
+              Selecciona Modelo
+            </option>
 
-  {modelosPorMarca[marca]?.map(
-    (item: string) => (
+            {marca &&
+              modelosPorMarca[marca]?.map((modeloItem: string) => (
 
-      <option
-        key={item}
-        value={item}
-      >
-        {item}
-      </option>
+                <option
+                  key={modeloItem}
+                  value={modeloItem}
+                >
+                  {modeloItem}
+                </option>
 
-    )
-  )}
+              ))}
 
-</select>
+          </select>
+
           <input
             type="text"
             placeholder="Placas"
-            className="border p-3 rounded"
             value={placas}
-            onChange={(e) => setPlacas(e.target.value)}
+            onChange={(e) =>
+              setPlacas(e.target.value)
+            }
+            className="border p-3 rounded"
           />
 
           <input
-            type="number"
+            type="text"
             placeholder="Año"
-            className="border p-3 rounded"
             value={anio}
-            onChange={(e) => setAnio(e.target.value)}
+            onChange={(e) =>
+              setAnio(e.target.value)
+            }
+            className="border p-3 rounded"
           />
 
           <button
@@ -324,37 +256,33 @@ export default function VehiculosPage() {
             className="bg-black text-white p-3 rounded"
           >
             Guardar Vehículo
+          </button>
 
-          <button
-            onClick={guardarVehiculo}
-            className="w-full bg-black text-white p-3 rounded"
-           >
-               Guardar Vehículo
-             </button>
         </div>
 
       </div>
 
-      <div className="bg-white p-6 rounded-xl shadow">
+      <div>
 
-        <h2 className="text-2xl font-semibold mb-4">
-          Lista de Vehículos
+        <h2 className="text-3xl font-bold mb-6">
+          Vehículos Registrados
         </h2>
 
-        <div className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-6">
 
           {vehiculos.map((vehiculo) => (
 
             <div
               key={vehiculo.id}
-              className="border p-4 rounded"
+              className="bg-white p-6 rounded-xl shadow"
             >
 
+              <h3 className="text-2xl font-bold mb-2">
+                {vehiculo.marca}
+              </h3>
+
               <p>
-                <strong>
-                ID: {vehiculo.id} —    
-                  {vehiculo.marca} {vehiculo.modelo}
-                </strong>
+                Modelo: {vehiculo.modelo}
               </p>
 
               <p>
@@ -363,10 +291,6 @@ export default function VehiculosPage() {
 
               <p>
                 Año: {vehiculo.anio}
-              </p>
-
-              <p>
-                Cliente: {vehiculo.clientes?.nombre}
               </p>
 
             </div>
@@ -378,5 +302,7 @@ export default function VehiculosPage() {
       </div>
 
     </main>
+
   )
+
 }
