@@ -1,206 +1,107 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 export default function AdminPage() {
 
-  const [seccion, setSeccion] =
-    useState('dashboard')
+  const [clientes, setClientes] = useState(0)
+  const [vehiculos, setVehiculos] = useState(0)
+  const [documentos, setDocumentos] = useState(0)
+  const [vencimientos, setVencimientos] = useState(0)
+
+  useEffect(() => {
+
+    obtenerDatos()
+
+  }, [])
+
+  const obtenerDatos = async () => {
+
+    const { count: clientesCount } = await supabase
+      .from('clientes')
+      .select('*', { count: 'exact', head: true })
+
+    const { count: vehiculosCount } = await supabase
+      .from('vehiculos')
+      .select('*', { count: 'exact', head: true })
+
+    const { count: documentosCount } = await supabase
+      .from('documentos')
+      .select('*', { count: 'exact', head: true })
+
+    const { count: vencimientosCount } = await supabase
+      .from('vencimientos')
+      .select('*', { count: 'exact', head: true })
+
+    setClientes(clientesCount || 0)
+    setVehiculos(vehiculosCount || 0)
+    setDocumentos(documentosCount || 0)
+    setVencimientos(vencimientosCount || 0)
+
+  }
 
   return (
 
-    <main className="flex min-h-screen bg-gray-100">
+    <div>
 
-      {/* SIDEBAR */}
+      <h1 className="text-5xl font-bold mb-10">
+        Dashboard
+      </h1>
 
-      <aside className="w-72 bg-black text-white p-6">
+      <div className="grid grid-cols-4 gap-6">
 
-        <h1 className="text-3xl font-bold mb-10">
-          Control Vehicular
-        </h1>
+        <div className="bg-white p-6 rounded shadow">
 
-        <div className="flex flex-col gap-4">
-
-          <button
-            onClick={() =>
-              setSeccion('dashboard')
-            }
-            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
-          >
-            Dashboard
-          </button>
-
-          <button
-            onClick={() =>
-              setSeccion('clientes')
-            }
-            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
-          >
+          <h2 className="text-gray-500">
             Clientes
-          </button>
+          </h2>
 
-          <button
-            onClick={() =>
-              setSeccion('vehiculos')
-            }
-            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
-          >
-            Vehículos
-          </button>
-
-          <button
-            onClick={() =>
-              setSeccion('vencimientos')
-            }
-            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
-          >
-            Vencimientos
-          </button>
-
-          <button
-            onClick={() =>
-              setSeccion('documentos')
-            }
-            className="text-left p-3 rounded bg-zinc-900 hover:bg-zinc-700"
-          >
-            Documentos
-          </button>
+          <p className="text-4xl font-bold mt-2">
+            {clientes}
+          </p>
 
         </div>
 
-      </aside>
+        <div className="bg-white p-6 rounded shadow">
 
-      {/* CONTENIDO */}
+          <h2 className="text-gray-500">
+            Vehículos
+          </h2>
 
-      <section className="flex-1 p-10">
+          <p className="text-4xl font-bold mt-2">
+            {vehiculos}
+          </p>
 
-        {seccion === 'dashboard' && (
+        </div>
 
-          <div>
+        <div className="bg-white p-6 rounded shadow">
 
-            <h1 className="text-5xl font-bold mb-10">
-              Dashboard
-            </h1>
+          <h2 className="text-gray-500">
+            Documentos
+          </h2>
 
-            <div className="grid grid-cols-3 gap-6">
+          <p className="text-4xl font-bold mt-2">
+            {documentos}
+          </p>
 
-              <div className="bg-white p-8 rounded-xl shadow">
+        </div>
 
-                <h2 className="text-4xl font-bold">
-                  15
-                </h2>
+        <div className="bg-white p-6 rounded shadow">
 
-                <p>
-                  Clientes
-                </p>
+          <h2 className="text-gray-500">
+            Vencimientos
+          </h2>
 
-              </div>
+          <p className="text-4xl font-bold mt-2">
+            {vencimientos}
+          </p>
 
-              <div className="bg-white p-8 rounded-xl shadow">
+        </div>
 
-                <h2 className="text-4xl font-bold">
-                  48
-                </h2>
+      </div>
 
-                <p>
-                  Vehículos
-                </p>
-
-              </div>
-
-              <div className="bg-white p-8 rounded-xl shadow">
-
-                <h2 className="text-4xl font-bold">
-                  7
-                </h2>
-
-                <p>
-                  Vencimientos
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        )}
-
-        {seccion === 'clientes' && (
-
-          <div>
-
-            <h1 className="text-5xl font-bold mb-10">
-              Clientes
-            </h1>
-
-            <div className="bg-white p-8 rounded-xl shadow">
-
-              Tabla de clientes
-
-            </div>
-
-          </div>
-
-        )}
-
-        {seccion === 'vehiculos' && (
-
-          <div>
-
-            <h1 className="text-5xl font-bold mb-10">
-              Vehículos
-            </h1>
-
-            <div className="bg-white p-8 rounded-xl shadow">
-
-              Tabla de vehículos
-
-            </div>
-
-          </div>
-
-        )}
-
-        {seccion === 'vencimientos' && (
-
-          <div>
-
-            <h1 className="text-5xl font-bold mb-10">
-              Vencimientos
-            </h1>
-
-            <div className="bg-white p-8 rounded-xl shadow">
-
-              Alertas y vencimientos
-
-            </div>
-
-          </div>
-
-        )}
-
-        {seccion === 'documentos' && (
-
-          <div>
-
-            <h1 className="text-5xl font-bold mb-10">
-              Documentos
-            </h1>
-
-            <div className="bg-white p-8 rounded-xl shadow">
-
-              Gestión documental
-
-            </div>
-
-          </div>
-
-        )}
-
-      </section>
-
-    </main>
+    </div>
 
   )
 
