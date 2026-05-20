@@ -35,8 +35,7 @@ const usuario = usuarios[0]
       .from('usuarios')
       .select('*')
       .eq('auth', userId)
-      .single()
-
+  
     if (!usuario) {
 
       return alert('Usuario sin permisos')
