@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
 
+    // LOGIN SUPABASE
     const { data, error } = await supabase.auth.signInWithPassword({
 
       email,
@@ -20,16 +21,19 @@ export default function LoginPage() {
 
     })
 
+    // SI HAY ERROR
     if (error) {
 
       return alert(error.message)
 
     }
 
+    // ID DEL USUARIO LOGEADO
     const userId = data.user.id
 
     console.log('USER ID:', userId)
 
+    // BUSCAR USUARIO EN TABLA usuarios
     const { data: usuarios, error: userError } = await supabase
       .from('usuarios')
       .select('*')
@@ -37,14 +41,17 @@ export default function LoginPage() {
 
     console.log('USUARIOS:', usuarios)
 
+    // SI NO EXISTE
     if (userError || !usuarios || usuarios.length === 0) {
 
       return alert('Usuario sin permisos')
 
     }
 
+    // TOMAR PRIMER USUARIO
     const usuario = usuarios[0]
 
+    // SI ES ADMIN
     if (usuario.rol === 'admin') {
 
       router.push('/admin')
@@ -52,6 +59,7 @@ export default function LoginPage() {
 
     }
 
+    // SI ES CLIENTE
     if (usuario.rol === 'cliente') {
 
       router.push('/portal')
@@ -59,6 +67,7 @@ export default function LoginPage() {
 
     }
 
+    // SI EL ROL NO EXISTE
     alert('Rol no válido')
 
   }
