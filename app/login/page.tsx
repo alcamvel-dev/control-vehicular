@@ -27,14 +27,14 @@ export default function LoginPage() {
 
     }
 
-    const userId = data.user.id
+    const userEmail = data.user.email
 
-    console.log('USER ID:', userId)
+console.log('EMAIL:', userEmail)
 
-    const { data: usuarios, error: userError } = await supabase
-      .from('usuarios')
-      .select('*')
-      .eq('auth', userId)
+const { data: usuarios, error: userError } = await supabase
+  .from('usuarios')
+  .select('*')
+  .eq('correo', userEmail)
 
     console.log('USUARIOS:', usuarios)
 
