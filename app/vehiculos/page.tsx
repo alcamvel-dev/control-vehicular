@@ -21,6 +21,7 @@ export default function VehiculosPage() {
       'Golf',
       'Tiguan',
       'Virtus',
+      'Pointer',
     ],
 
     BMW: [
@@ -65,6 +66,7 @@ export default function VehiculosPage() {
     const { data, error } = await supabase
       .from('clientes')
       .select('*')
+      .order('nombre')
 
     if (!error && data) {
 
@@ -96,67 +98,69 @@ export default function VehiculosPage() {
 
   const guardarVehiculo = async () => {
 
-    if (!clienteId) {
+    if (
+      !clienteId ||
+      !marca ||
+      !modelo ||
+      !placas ||
+      !anio
+    ) {
 
-      return alert('Selecciona un cliente')
+      return alert('Completa todos los campos')
 
     }
 
     const { error } = await supabase
       .from('vehiculos')
       .insert([
-
         {
-          cliente: clienteId,
+          cliente_id: clienteId,
           marca,
           modelo,
           placas,
           anio,
         }
-
       ])
 
     if (error) {
 
-      alert(error.message)
-
-    } else {
-
-      alert('Vehículo guardado')
-
-      setClienteId('')
-      setMarca('')
-      setModelo('')
-      setPlacas('')
-      setAnio('')
-
-      obtenerVehiculos()
+      return alert(error.message)
 
     }
+
+    setClienteId('')
+    setMarca('')
+    setModelo('')
+    setPlacas('')
+    setAnio('')
+
+    obtenerVehiculos()
 
   }
 
   return (
 
-    <main className="p-10 bg-gray-100 min-h-screen">
+    <div>
 
       <h1 className="text-5xl font-bold mb-10">
-        Registro de Vehículos
+        Vehículos
       </h1>
 
-      <div className="bg-white p-6 rounded-xl shadow mb-10">
+      {/* FORMULARIO */}
 
-        <h2 className="text-3xl font-bold mb-6">
+      <div className="bg-white p-6 rounded shadow mb-10">
+
+        <h2 className="text-2xl font-bold mb-6">
           Nuevo Vehículo
         </h2>
 
-        <div className="grid gap-4">
+        <div className="grid grid-cols-5 gap-4">
+
+          {/* CLIENTE */}
 
           <select
             value={clienteId}
-            onChange={(e) =>
-              setClienteId(e.target.value)
-            }
+            onChange={(e) => setClienteId(e.target.value)}
             className="border p-3 rounded"
           >
 
@@ -177,6 +181,8 @@ export default function VehiculosPage() {
 
           </select>
 
+          {/* MARCA */}
+
           <select
             value={marca}
             onChange={(e) => {
@@ -189,7 +195,7 @@ export default function VehiculosPage() {
           >
 
             <option value="">
-              Selecciona Marca
+              Marca
             </option>
 
             {Object.keys(modelosPorMarca).map((marcaItem) => (
@@ -205,16 +211,16 @@ export default function VehiculosPage() {
 
           </select>
 
+          {/* MODELO */}
+
           <select
             value={modelo}
-            onChange={(e) =>
-              setModelo(e.target.value)
-            }
+            onChange={(e) => setModelo(e.target.value)}
             className="border p-3 rounded"
           >
 
             <option value="">
-              Selecciona Modelo
+              Modelo
             </option>
 
             {marca &&
@@ -231,77 +237,111 @@ export default function VehiculosPage() {
 
           </select>
 
+          {/* PLACAS */}
+
           <input
             type="text"
             placeholder="Placas"
             value={placas}
-            onChange={(e) =>
-              setPlacas(e.target.value)
-            }
+            onChange={(e) => setPlacas(e.target.value)}
             className="border p-3 rounded"
           />
+
+          {/* AÑO */}
 
           <input
             type="text"
             placeholder="Año"
             value={anio}
-            onChange={(e) =>
-              setAnio(e.target.value)
-            }
+            onChange={(e) => setAnio(e.target.value)}
             className="border p-3 rounded"
           />
 
-          <button
-            onClick={guardarVehiculo}
-            className="bg-black text-white p-3 rounded"
-          >
-            Guardar Vehículo
-          </button>
-
         </div>
+
+        <button
+          onClick={guardarVehiculo}
+          className="bg-black text-white px-6 py-3 rounded mt-6"
+        >
+          Guardar Vehículo
+        </button>
 
       </div>
 
-      <div>
+      {/* TABLA */}
 
-        <h2 className="text-3xl font-bold mb-6">
-          Vehículos Registrados
-        </h2>
+      <div className="bg-white p-6 rounded shadow">
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <table className="w-full">
 
-          {vehiculos.map((vehiculo) => (
+          <thead>
 
-            <div
-              key={vehiculo.id}
-              className="bg-white p-6 rounded-xl shadow"
-            >
+            <tr className="border-b">
 
-              <h3 className="text-2xl font-bold mb-2">
-                {vehiculo.marca}
-              </h3>
+              <th className="text-left p-3">
+                Cliente
+              </th>
 
-              <p>
-                Modelo: {vehiculo.modelo}
-              </p>
+              <th className="text-left p-3">
+                Marca
+              </th>
 
-              <p>
-                Placas: {vehiculo.placas}
-              </p>
+              <th className="text-left p-3">
+                Modelo
+              </th>
 
-              <p>
-                Año: {vehiculo.anio}
-              </p>
+              <th className="text-left p-3">
+                Placas
+              </th>
 
-            </div>
+              <th className="text-left p-3">
+                Año
+              </th>
 
-          ))}
+            </tr>
 
-        </div>
+          </thead>
+
+          <tbody>
+
+            {vehiculos.map((vehiculo) => (
+
+              <tr
+                key={vehiculo.id}
+                className="border-b"
+              >
+
+                <td className="p-3">
+                  {vehiculo.clientes?.nombre}
+                </td>
+
+                <td className="p-3">
+                  {vehiculo.marca}
+                </td>
+
+                <td className="p-3">
+                  {vehiculo.modelo}
+                </td>
+
+                <td className="p-3">
+                  {vehiculo.placas}
+                </td>
+
+                <td className="p-3">
+                  {vehiculo.anio}
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
 
       </div>
 
-    </main>
+    </div>
 
   )
 

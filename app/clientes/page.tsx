@@ -13,18 +13,18 @@ export default function ClientesPage() {
 
   useEffect(() => {
 
-    cargarClientes()
+    obtenerClientes()
 
   }, [])
 
-  async function cargarClientes() {
+  const obtenerClientes = async () => {
 
-    const { data } =
-      await supabase
+    const { data, error } = await supabase
       .from('clientes')
       .select('*')
+      .order('id', { ascending: false })
 
-    if (data) {
+    if (!error && data) {
 
       setClientes(data)
 
@@ -32,104 +32,149 @@ export default function ClientesPage() {
 
   }
 
-  async function crearCliente() {
+  const guardarCliente = async () => {
 
-    await supabase
+    if (!nombre || !telefono || !correo) {
+
+      return alert('Completa todos los campos')
+
+    }
+
+    const { error } = await supabase
       .from('clientes')
-      .insert({
+      .insert([
+        {
+          nombre,
+          telefono,
+          correo,
+        }
+      ])
 
-        nombre,
-        telefono,
-        correo,
+    if (error) {
 
-      })
+      return alert(error.message)
+
+    }
 
     setNombre('')
     setTelefono('')
     setCorreo('')
 
-    cargarClientes()
+    obtenerClientes()
 
   }
 
   return (
 
-    <main className="min-h-screen bg-gray-100 p-10">
+    <div>
 
       <h1 className="text-5xl font-bold mb-10">
         Clientes
       </h1>
 
-      <div className="bg-white p-8 rounded-xl shadow mb-10">
+      {/* FORMULARIO */}
 
-        <h2 className="text-3xl font-bold mb-6">
+      <div className="bg-white p-6 rounded shadow mb-10">
+
+        <h2 className="text-2xl font-bold mb-6">
           Nuevo Cliente
         </h2>
 
-        <input
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) =>
-            setNombre(e.target.value)
-          }
-          className="w-full border p-3 mb-4 rounded"
-        />
+        <div className="grid grid-cols-3 gap-4">
 
-        <input
-          placeholder="Teléfono"
-          value={telefono}
-          onChange={(e) =>
-            setTelefono(e.target.value)
-          }
-          className="w-full border p-3 mb-4 rounded"
-        />
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            className="border p-3 rounded"
+          />
 
-        <input
-          placeholder="Correo"
-          value={correo}
-          onChange={(e) =>
-            setCorreo(e.target.value)
-          }
-          className="w-full border p-3 mb-4 rounded"
-        />
+          <input
+            type="text"
+            placeholder="Teléfono"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            className="border p-3 rounded"
+          />
+
+          <input
+            type="email"
+            placeholder="Correo"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+            className="border p-3 rounded"
+          />
+
+        </div>
 
         <button
-          onClick={crearCliente}
-          className="bg-black text-white px-6 py-3 rounded"
+          onClick={guardarCliente}
+          className="bg-black text-white px-6 py-3 rounded mt-6"
         >
           Guardar Cliente
         </button>
 
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* TABLA */}
 
-        {clientes.map((cliente) => (
+      <div className="bg-white p-6 rounded shadow">
 
-          <div
-            key={cliente.id}
-            className="bg-white p-6 rounded-xl shadow"
-          >
+        <table className="w-full">
 
-            <h2 className="text-2xl font-bold mb-3">
-              {cliente.nombre}
-            </h2>
+          <thead>
 
-            <p>
-              {cliente.telefono}
-            </p>
+            <tr className="border-b">
 
-            <p>
-              {cliente.correo}
-            </p>
+              <th className="text-left p-3">
+                Nombre
+              </th>
 
-          </div>
+              <th className="text-left p-3">
+                Teléfono
+              </th>
 
-        ))}
+              <th className="text-left p-3">
+                Correo
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            {clientes.map((cliente) => (
+
+              <tr
+                key={cliente.id}
+                className="border-b"
+              >
+
+                <td className="p-3">
+                  {cliente.nombre}
+                </td>
+
+                <td className="p-3">
+                  {cliente.telefono}
+                </td>
+
+                <td className="p-3">
+                  {cliente.correo}
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
 
       </div>
 
-    </main>
+    </div>
 
   )
 
