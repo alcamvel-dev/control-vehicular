@@ -1,109 +1,51 @@
-'use client'
+const handleLogin = async () => {
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+  const { data, error } = await supabase.auth.signInWithPassword({
 
-export default function LoginPage() {
+    email,
+    password,
 
-  const router = useRouter()
+  })
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  if (error) {
 
-  const handleLogin = async () => {
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-
-      email,
-      password,
-
-    })
-
-    if (error) {
-
-      return alert(error.message)
-
-    }
-
-    const userId = data.user.id
-
-    console.log('USER ID:', userId)
-
-    const { data: usuarios, error: userError } = await supabase
-      .from('usuarios')
-      .select('*')
-      .eq('auth', userId)
-
-    console.log('USUARIOS:', usuarios)
-
-    if (userError || !usuarios || usuarios.length === 0) {
-
-      return alert('Usuario sin permisos')
-
-    }
-
-    const usuario = usuarios[0]
-
-    if (usuario.rol === 'admin') {
-
-      router.push('/admin')
-      return
-
-    }
-
-    if (usuario.rol === 'cliente') {
-
-      router.push('/portal')
-      return
-
-    }
-
-    alert('Rol no válido')
+    return alert(error.message)
 
   }
 
-  return (
+  const userId = data.user.id
 
-    <main className="min-h-screen flex items-center justify-center bg-gray-100">
+  console.log('USER ID:', userId)
 
-      <div className="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
+  const { data: usuarios, error: userError } = await supabase
+    .from('usuarios')
+    .select('*')
+    .eq('auth', userId)
 
-        <h1 className="text-4xl font-bold mb-8 text-black">
-          LOGIN NUEVO
-        </h1>
+  console.log('USUARIOS:', usuarios)
 
-        <input
-          type="email"
-          placeholder="Correo"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          className="w-full border border-gray-300 p-4 mb-4 rounded-lg text-black"
-        />
+  if (userError || !usuarios || usuarios.length === 0) {
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-          className="w-full border border-gray-300 p-4 mb-6 rounded-lg text-black"
-        />
+    return alert('Usuario sin permisos')
 
-        <button
-          onClick={handleLogin}
-          className="w-full bg-black text-white p-4 rounded-lg hover:bg-gray-800 transition"
-        >
-          Entrar
-        </button>
+  }
 
-      </div>
+  const usuario = usuarios[0]
 
-    </main>
+  if (usuario.rol === 'admin') {
 
-  )
+    router.push('/admin')
+    return
+
+  }
+
+  if (usuario.rol === 'cliente') {
+
+    router.push('/portal')
+    return
+
+  }
+
+  alert('Rol no válido')
 
 }
