@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 export default function AdminLayout({
   children,
@@ -8,63 +10,86 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
 
+  const router = useRouter()
+
+  const cerrarSesion = async () => {
+
+    await supabase.auth.signOut()
+
+    router.push('/login')
+
+  }
+
   return (
 
     <div className="flex min-h-screen bg-gray-100">
 
       {/* SIDEBAR */}
 
-      <aside className="w-64 bg-black text-white p-6">
+      <aside className="w-64 bg-black text-white p-6 flex flex-col">
 
-        <h1 className="text-3xl font-bold mb-10">
-          PANEL ADMIN
-        </h1>
+        <div>
 
-        <nav className="flex flex-col gap-4">
+          <h1 className="text-3xl font-bold mb-10">
+            PANEL ADMIN
+          </h1>
 
-          <Link
-            href="/admin"
-            className="bg-gray-900 p-4 rounded"
-          >
-            Dashboard
-          </Link>
+          <nav className="flex flex-col gap-4">
 
-          <Link
-            href="/clientes"
-            className="bg-gray-900 p-4 rounded"
-          >
-            Clientes
-          </Link>
+            <Link
+              href="/admin"
+              className="bg-gray-900 hover:bg-gray-800 p-4 rounded transition"
+            >
+              Dashboard
+            </Link>
 
-          <Link
-            href="/vehiculos"
-            className="bg-gray-900 p-4 rounded"
-          >
-            Vehículos
-          </Link>
+            <Link
+              href="/clientes"
+              className="bg-gray-900 hover:bg-gray-800 p-4 rounded transition"
+            >
+              Clientes
+            </Link>
 
-          <Link
-            href="/documentos"
-            className="bg-gray-900 p-4 rounded"
-          >
-            Documentos
-          </Link>
+            <Link
+              href="/vehiculos"
+              className="bg-gray-900 hover:bg-gray-800 p-4 rounded transition"
+            >
+              Vehículos
+            </Link>
 
-          <Link
-            href="/vencimientos"
-            className="bg-gray-900 p-4 rounded"
-          >
-            Vencimientos
-          </Link>
+            <Link
+              href="/documentos"
+              className="bg-gray-900 hover:bg-gray-800 p-4 rounded transition"
+            >
+              Documentos
+            </Link>
 
-          <Link
-            href="/timeline"
-            className="bg-gray-900 p-4 rounded"
-          >
-            Timeline
-          </Link>
+            <Link
+              href="/vencimientos"
+              className="bg-gray-900 hover:bg-gray-800 p-4 rounded transition"
+            >
+              Vencimientos
+            </Link>
 
-        </nav>
+            <Link
+              href="/timeline"
+              className="bg-gray-900 hover:bg-gray-800 p-4 rounded transition"
+            >
+              Timeline
+            </Link>
+
+          </nav>
+
+        </div>
+
+        {/* BOTON LOGOUT */}
+
+        <button
+          onClick={cerrarSesion}
+          className="mt-auto bg-red-600 hover:bg-red-700 p-4 rounded transition"
+        >
+          Cerrar sesión
+        </button>
 
       </aside>
 
