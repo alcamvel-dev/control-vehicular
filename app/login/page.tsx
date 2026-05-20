@@ -53,9 +53,7 @@ export default function LoginPage() {
 
   }
 
-  const usuario = usuarios[0]
-
-  console.log('ROL:', usuario.rol)
+   console.log('ROL:', usuario.rol)
 
   if (usuario.rol === 'admin') {
 
