@@ -13,34 +13,37 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
 
-   const { data: usuarios, error: userError } = await supabase
-  .from('usuarios')
-  .select('*')
-  .eq('auth', userId)
+    const { data, error } = await supabase.auth.signInWithPassword({
 
-console.log('USER ID:', userId)
-console.log('USUARIOS:', usuarios)
+      email,
+      password,
 
-if (userError || !usuarios || usuarios.length === 0) {
+    })
 
-  return alert('Usuario sin permisos')
+    if (error) {
 
-}
+      return alert(error.message)
 
-const usuario = usuarios[0]
+    }
 
     const userId = data.user.id
 
-    const { data: usuario } = await supabase
+    console.log('USER ID:', userId)
+
+    const { data: usuarios, error: userError } = await supabase
       .from('usuarios')
       .select('*')
       .eq('auth', userId)
-  
-    if (!usuario) {
+
+    console.log('USUARIOS:', usuarios)
+
+    if (userError || !usuarios || usuarios.length === 0) {
 
       return alert('Usuario sin permisos')
 
     }
+
+    const usuario = usuarios[0]
 
     if (usuario.rol === 'admin') {
 
@@ -55,6 +58,8 @@ const usuario = usuarios[0]
       return
 
     }
+
+    alert('Rol no válido')
 
   }
 
