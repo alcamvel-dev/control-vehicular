@@ -13,18 +13,21 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+   const { data: usuarios, error: userError } = await supabase
+  .from('usuarios')
+  .select('*')
+  .eq('auth', userId)
 
-      email,
-      password,
+console.log('USER ID:', userId)
+console.log('USUARIOS:', usuarios)
 
-    })
+if (userError || !usuarios || usuarios.length === 0) {
 
-    if (error) {
+  return alert('Usuario sin permisos')
 
-      return alert(error.message)
+}
 
-    }
+const usuario = usuarios[0]
 
     const userId = data.user.id
 
