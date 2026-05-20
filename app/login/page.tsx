@@ -34,7 +34,7 @@ export default function LoginPage() {
     const { data: usuarios, error: userError } = await supabase
       .from('usuarios')
       .select('*')
-      .eq('auth', userId)
+      .eq('auth', `${userId}`)
 
     console.log('USUARIOS:', usuarios)
 
