@@ -11,50 +11,76 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = async () => {
+const handleLogin = async () => {
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
 
-      email,
-      password,
+    email,
+    password,
 
-    })
+  })
 
-    if (error) {
+  if (error) {
 
-      alert(error.message)
-      return
+    alert(error.message)
+    return
 
-    }
+  }
 
-    const userEmail = data.user.email
+  const userId = data.user.id
 
-console.log('EMAIL:', userEmail)
+  console.log('USER ID:', userId)
 
-const { data: usuarios, error: userError } = await supabase
-  .from('usuarios')
-  .select('*')
-  .eq('correo', userEmail)
+  const { data: usuarios, error: userError } = await supabase
+    .from('usuarios')
+    .select('*')
+    .eq('auth', userId)
 
-    console.log('USUARIOS:', usuarios)
+  console.log('USUARIOS:', usuarios)
 
-    if (userError) {
+  if (userError) {
 
-      console.log(userError)
-      alert('Error buscando usuario')
-      return
+    console.log(userError)
+    alert('Error buscando usuario')
+    return
 
-    }
+  }
 
-    if (!usuarios || usuarios.length === 0) {
+  if (!usuarios || usuarios.length === 0) {
 
-      alert('Usuario sin permisos')
-      return
+    alert('Usuario sin permisos')
+    return
 
-    }
+  }
 
+  const usuario = usuarios[0]
+
+  console.log('ROL:', usuario.rol)
+
+  if (usuario.rol === 'admin') {
+
+    router.push('/admin')
+    return
+
+  }
+
+  if (usuario.rol === 'cliente') {
+
+    router.push('/portal')
+    return
+
+  }
+
+  alert('Rol no válido')
+
+}
+
+    // PRIMER USUARIO
     const usuario = usuarios[0]
 
+    console.log('ROL:', usuario.rol)
+
+    // ADMIN
     if (usuario.rol === 'admin') {
 
       router.push('/admin')
@@ -62,6 +88,7 @@ const { data: usuarios, error: userError } = await supabase
 
     }
 
+    // CLIENTE
     if (usuario.rol === 'cliente') {
 
       router.push('/portal')
@@ -69,6 +96,7 @@ const { data: usuarios, error: userError } = await supabase
 
     }
 
+    // ROL INVALIDO
     alert('Rol no válido')
 
   }
